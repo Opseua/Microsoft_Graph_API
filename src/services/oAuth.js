@@ -12,8 +12,7 @@ const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const clientDirectory = process.env.CLIENT_DIRECTORY;
 
-async function teste() {
-    // POST → x-www-form-urlencoded
+async function getOAuth() {
     const formData = new URLSearchParams();
     formData.append('grant_type', 'client_credentials');
     formData.append('client_id', clientId);
@@ -33,5 +32,5 @@ async function teste() {
     console.log(process.env.OAUTH_TOKEN);
     console.log("\n\n");
 }
-teste()
+getOAuth()
 
