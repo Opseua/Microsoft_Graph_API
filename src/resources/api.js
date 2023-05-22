@@ -19,10 +19,10 @@ async function api(inf_ok) {
         muteHttpExceptions: true,
         validateHttpsCertificates: true,
       });
-      console.log('API: OK');
+      console.log('API: OK Google App Script');
       return req.getContentText();
     } catch (error) {
-      console.log('API: ERRO');
+      console.log('API: ERRO Google App Script');
       return error.message;
     }
   } else {
@@ -35,10 +35,10 @@ async function api(inf_ok) {
         redirect: 'follow',
         keepalive: true
       });
-      console.log('API: OK');
+      console.log('API: OK JavaScript');
       return await req.text();
     } catch (error) {
-      console.log('API: ERRO');
+      console.log('API: ERRO JavaScript');
       return error;
     }
   }
@@ -71,8 +71,8 @@ teste() */
   // POST → x-www-form-urlencoded
   const formData = new URLSearchParams();
   formData.append('grant_type', 'client_credentials');
-  formData.append('client_id', 'c683fd93-XXXXXXXXXXXXX');
-  formData.append('client_secret', '0008Q~XXXXXXXXXX');
+  formData.append('client_id', 'c683fd93-7db0-44a5-98a3-7fe0890b5c90');
+  formData.append('client_secret', '0008Q~5O2MA2Q-YeMJQN9de_4pPVzx8tse096c38');
   formData.append('resource', 'https://graph.microsoft.com');
   const corpo = formData.toString()
   const requisicao = {
