@@ -44,14 +44,16 @@ async function api(inf_ok) {
   }
 
 }
-
 export default api
 
 
 
+// ###################### EXEMPLOS DE COMO FAZER A REQUISICAO ######################
+
+/* 
 
 
-/* async function teste() {
+async function teste() {
   const corpo = String.raw`ESSA \ É / " A ' INFORMACAO`;
   //const corpo = { teste: 'OLA TUDO BEM' };
   const requisicao = {
@@ -63,11 +65,10 @@ export default api
   const re = await api(requisicao);
   console.log(re)
 }
-teste() */
+teste()
 
 
-
-/* async function teste() {
+async function teste() {
   // POST → x-www-form-urlencoded
   const formData = new URLSearchParams();
   formData.append('grant_type', 'client_credentials');
@@ -84,4 +85,7 @@ teste() */
   const re = await api(requisicao);
   console.log(re)
 }
-teste() */
+teste() 
+
+
+*/

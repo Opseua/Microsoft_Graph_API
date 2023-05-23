@@ -20,9 +20,8 @@ async function listAllFilesByType() {
     };
     const re = await api(requisicao);
     const res = JSON.parse(re);
-    process.env.FILE_ID = res.value[0].id;
-    console.log("\n\n");
+    console.log("\n");
     console.log(res.value[0]);
-    console.log("\n\n");
+    console.log("\n");
 }
 listAllFilesByType()

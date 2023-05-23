@@ -12,11 +12,7 @@ const tenantId = process.env.TENANT_ID;
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 
-
 async function oAuth() {
-
-    //console.log(clientDirectory)
-    //return
 
     const formData = new URLSearchParams();
     formData.append('grant_type', 'client_credentials');
@@ -33,10 +29,9 @@ async function oAuth() {
     let res = await api(requisicao);
     res = JSON.parse(res);
     const token = res.access_token;
-    //process.env.OAUTH_TOKEN = token;
-    console.log("\n\n");
+    console.log("\n");
     console.log(token);
-    console.log("\n\n");
+    console.log("\n");
 }
 oAuth()
 

@@ -1,5 +1,6 @@
-import { config } from 'dotenv';
-config();
+import fs from 'fs';
+const configFile = fs.readFileSync('config.json');
+const config = JSON.parse(configFile);
 
 let fun;
 async function api(inf) {
@@ -8,8 +9,8 @@ async function api(inf) {
   return await fun(inf);
 }
 
-const fileId = process.env.FILE_ID;
-const oAuth = process.env.TOKEN;
+const fileId = config.fileId
+const token = config.token
 
 async function createSession() {
   const corpo = { "persistChanges": true }
@@ -18,18 +19,23 @@ async function createSession() {
     method: 'POST',
     headers: {
       'Content-Type': 'Application/Json',
-      'authorization': `Bearer ${oAuth}`
+      'authorization': `Bearer ${token}`
     },
     body: corpo
   };
   let res = await api(requisicao);
   res = JSON.parse(res);
-  const session = res.id;
-  //console.log("\n\n");
-  //console.log(session);
-  //console.log("\n\n");
-  return session;
+  let msg = ''
+  if ("persistChanges" in res) {
+    config.session = res.id;
+    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+    msg = 'OK CREATE SESSION'
+  }
+  else {
+    msg = res.error.code;
+  }
+  console.log(msg)
 }
-createSession()
-
 export default createSession
+
+createSession()

@@ -37,9 +37,9 @@ async function updateRange(inf) {
     };
     const re = await api(requisicao);
     const res = JSON.parse(re);
-    //console.log("\n\n");
+    //console.log("\n");
     //console.log(re);
-    //console.log("\n\n");
+    //console.log("\n");
     return res;
 }
 

@@ -20,11 +20,9 @@ async function getSheetInf() {
     };
     const re = await api(requisicao);
     const res = JSON.parse(re);
-    process.env.TABSHEETID = res.value[0].id;
-    process.env.TABSHEETNAME = res.value[0].name;
-    console.log("\n\n");
+    console.log("\n");
     console.log(res.value[0].name);
     console.log(res.value[0].id);
-    console.log("\n\n");
+    console.log("\n");
 }
 getSheetInf()
