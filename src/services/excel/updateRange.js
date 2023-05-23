@@ -18,7 +18,7 @@ const sheetTabId = process.env.SHEET_TAB_ID;
 const oAuth = process.env.TOKEN;
 
 // INFORMACOES EM JSON (fixo)
-async function getRange(inf) {
+async function updateRange(inf) {
 
     let session = '';
     if (inf === undefined) {
@@ -44,24 +44,21 @@ async function getRange(inf) {
 }
 
 async function run() {
-    let excel = '';
-    let resultado = await getRange()
-    if (resultado.error.code == undefined) {
-        excel = resultado.values[0];
+    const resultado = await updateRange()
+    if (resultado.error.code == 'undefined') {
+        console.log(resultado);
     }
     else if (resultado.error.code == 'InvalidAuthenticationToken') {
         console.log('TOKEN INVALIDO');
-        return
     }
     else if (resultado.error.code == 'InvalidSession') {
         console.log('SESSAO INVALIDA');
         const session = await createSession();
-        resultado = await getRange(session);
-        excel = resultado.values[0];
+        const resultado = await updateRange(session);
+        console.log(resultado.values[0]);
     } else {
         console.log("OUTRO ERRO");
-        return
     }
-    console.log(excel)
+
 }
 run()
