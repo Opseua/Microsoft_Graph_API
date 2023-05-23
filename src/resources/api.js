@@ -19,10 +19,10 @@ async function api(inf_ok) {
         muteHttpExceptions: true,
         validateHttpsCertificates: true,
       });
-      console.log('API: OK Google App Script');
+      //console.log('API: OK Google App Script');
       return req.getContentText();
     } catch (error) {
-      console.log('API: ERRO Google App Script');
+      //console.log('API: ERRO Google App Script');
       return error.message;
     }
   } else {
@@ -35,10 +35,10 @@ async function api(inf_ok) {
         redirect: 'follow',
         keepalive: true
       });
-      console.log('API: OK JavaScript');
+      //console.log('API: OK JavaScript');
       return await req.text();
     } catch (error) {
-      console.log('API: ERRO JavaScript');
+      //console.log('API: ERRO JavaScript');
       return error;
     }
   }

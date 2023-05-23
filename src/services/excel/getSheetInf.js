@@ -8,11 +8,11 @@ async function api(inf) {
     return await fun(inf);
 }
 const oAuth = process.env.OAUTH_TOKEN;
-const query = 'NOME_AQUI.xlsx';
+const fileId = process.env.FILE_ID;
 
-async function listAllFilesByType() {
+async function getSheetInf() {
     const requisicao = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
+        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets`,
         method: 'GET',
         headers: {
             'authorization': `Bearer ${oAuth}`
@@ -20,9 +20,11 @@ async function listAllFilesByType() {
     };
     const re = await api(requisicao);
     const res = JSON.parse(re);
-    process.env.FILE_ID = res.value[0].id;
+    process.env.TABSHEETID = res.value[0].id;
+    process.env.TABSHEETNAME = res.value[0].name;
     console.log("\n\n");
-    console.log(res.value[0]);
+    console.log(res.value[0].name);
+    console.log(res.value[0].id);
     console.log("\n\n");
 }
-listAllFilesByType()
+getSheetInf()

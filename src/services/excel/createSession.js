@@ -9,9 +9,9 @@ async function api(inf) {
 }
 
 const fileId = process.env.FILE_ID;
-const oAuth = process.env.OAUTH_TOKEN;
+const oAuth = process.env.TOKEN;
 
-async function getSession() {
+async function createSession() {
   const corpo = { "persistChanges": true }
   const requisicao = {
     url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
@@ -22,11 +22,14 @@ async function getSession() {
     },
     body: corpo
   };
-  const re = await api(requisicao);
-  const res = JSON.parse(re);
-  process.env.SESSION = res.id;
-  console.log("\n\n");
-  console.log(res.id);
-  console.log("\n\n");
+  let res = await api(requisicao);
+  res = JSON.parse(res);
+  const session = res.id;
+  //console.log("\n\n");
+  //console.log(session);
+  //console.log("\n\n");
+  return session;
 }
-getSession()
+createSession()
+
+export default createSession
