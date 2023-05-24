@@ -1,5 +1,6 @@
-import { config } from 'dotenv';
-config();
+import fs from 'fs';
+const configFile = fs.readFileSync('config.json');
+const config = JSON.parse(configFile);
 
 let fun;
 async function api(inf) {
@@ -7,22 +8,46 @@ async function api(inf) {
     fun = module.default;
     return await fun(inf);
 }
-const oAuth = process.env.OAUTH_TOKEN;
-const fileId = process.env.FILE_ID;
+
+let funRefreshToken;
+async function refreshToken(inf) {
+    const module = await import('../../services/refreshToken.js');
+    funRefreshToken = module.default;
+    return await funRefreshToken(inf);
+}
 
 async function getSheetInf() {
-    const requisicao = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets`,
-        method: 'GET',
-        headers: {
-            'authorization': `Bearer ${oAuth}`
+    let msg = '';
+    let ret = false;
+    const retRefreshToken = await refreshToken();
+    if (!retRefreshToken) {
+        let msg = 'ERRO AO ATUALIZAR TOKEN';
+    } else {
+        const fileId = config.fileId;
+        const token = config.token;
+        const requisicao = {
+            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets`,
+            method: 'GET',
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        };
+        let res = await api(requisicao);
+        res = JSON.parse(res);
+        if ("value" in res) {
+            config.sheetTabId = res.value[0].id;
+            config.sheetTabName = res.value[0].name;
+            fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+            msg = `ABA NOME: ${res.value[0].name} | ABA ID: ${res.value[0].id}`;
+            ret = true;
+        } else {
+            msg = 'ERRO AO BUSCAR INFORMACOES DA PLANILHA';
         }
-    };
-    const re = await api(requisicao);
-    const res = JSON.parse(re);
-    console.log("\n");
-    console.log(res.value[0].name);
-    console.log(res.value[0].id);
-    console.log("\n");
+    }
+
+    console.log(msg);
+    return ret
 }
+export default getSheetInf
+
 getSheetInf()

@@ -42,8 +42,8 @@ async function updateRange(inf) {
             },
             body: corpo
         };
-        const re = await api(requisicao);
-        const res = JSON.parse(re);
+        let res = await api(requisicao);
+        res = JSON.parse(res);
         if ("values" in res) {
             msg = res.values[0];
             ret = true;
@@ -60,11 +60,11 @@ export default updateRange
 
 
 
-function executarLoopComAtraso() {
+function loop() {
     for (let i = 0; i < 20; i++) {
         setTimeout(function () {
             updateRange()
         }, i * 3000);
     }
 }
-executarLoopComAtraso();
+loop();
