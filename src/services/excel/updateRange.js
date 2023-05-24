@@ -60,11 +60,10 @@ export default updateRange
 
 
 
-async function loop() {
-    for (let i = 0; i < 20; i++) {
-        setTimeout(async function () {
-            const ret = await updateRange()
-        }, i * 3000);
+for (let i = 0; i < 20; i++) {
+    const ret = await updateRange();
+    if (ret === false) {
+        break;
     }
+    await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
 }
-loop();

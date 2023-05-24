@@ -1,27 +1,60 @@
-import { config } from 'dotenv';
-config();
+import fs from 'fs';
+const configFile = fs.readFileSync('config.json');
+const config = JSON.parse(configFile);
 
-let fun;
+let funApi;
 async function api(inf) {
     const module = await import('../../resources/api.js');
-    fun = module.default;
-    return await fun(inf);
+    funApi = module.default;
+    return await funApi(inf);
 }
-const oAuth = process.env.OAUTH_TOKEN;
-const query = 'NOME_AQUI.xlsx';
+
+let funRefreshToken;
+async function refreshToken(inf) {
+    const module = await import('../../services/refreshToken.js');
+    funRefreshToken = module.default;
+    return await funRefreshToken(inf);
+}
 
 async function listAllFilesByType() {
-    const requisicao = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
-        method: 'GET',
-        headers: {
-            'authorization': `Bearer ${oAuth}`
+    let msg = '';
+    let ret = false;
+    const retRefreshToken = await refreshToken();
+    if (!retRefreshToken) {
+        let msg = 'ERRO AO ATUALIZAR TOKEN';
+    } else {
+        const query = config.fileName;
+        const token = config.token;
+        const requisicao = {
+            url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
+            method: 'GET',
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        };
+        let res = await api(requisicao);
+        res = JSON.parse(res);
+        if ("value" in res) {
+            if (res.value.length == 0) {
+                msg = 'NENHUM ARQUIVO ENCONTRADO';
+            } else {
+                config.fileId = res.value[0].id;
+                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
+                msg = 'OK LIST ALL FILES BY TYPE';
+                ret = true;
+            }
         }
-    };
-    const re = await api(requisicao);
-    const res = JSON.parse(re);
-    console.log("\n");
-    console.log(res.value[0]);
-    console.log("\n");
+        else {
+            msg = res.error.code;
+        }
+    }
+
+    console.log(msg);
+    return ret
 }
+export default listAllFilesByType
+
+
+
 listAllFilesByType()
