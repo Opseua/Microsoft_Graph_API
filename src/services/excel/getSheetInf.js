@@ -21,7 +21,7 @@ async function getSheetInf() {
     let ret = false;
     const retRefreshToken = await refreshToken();
     if (!retRefreshToken) {
-        let msg = 'ERRO AO ATUALIZAR TOKEN';
+        msg = 'ERRO AO ATUALIZAR TOKEN';
     } else {
         const fileId = config.fileId;
         const token = config.token;
@@ -51,4 +51,3 @@ async function getSheetInf() {
 }
 export default getSheetInf
 
-getSheetInf()

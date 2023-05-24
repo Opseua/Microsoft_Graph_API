@@ -23,7 +23,7 @@ async function updateRange(inf) {
     let ret = false;
     const retcreateSession = await createSession();
     if (!retcreateSession) {
-        let msg = 'ERRO AO CRIAR SESSAO';
+        msg = 'ERRO AO CRIAR SESSAO';
     } else {
         const fileId = config.fileId;
         const sheetTabName = config.sheetTabName;
@@ -45,7 +45,7 @@ async function updateRange(inf) {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("values" in res) {
-            msg = res.values[0];
+            msg = `ENVIADO: ${res.values[0]}`;
             ret = true;
         }
         else {

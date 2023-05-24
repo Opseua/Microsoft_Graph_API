@@ -21,7 +21,7 @@ async function createSession() {
   let ret = false;
   const retRefreshToken = await refreshToken();
   if (!retRefreshToken) {
-    let msg = 'ERRO AO ATUALIZAR TOKEN';
+    msg = 'ERRO AO ATUALIZAR TOKEN';
   } else {
     if (Date.now() < (config.expireInSession - 3000)) {
       msg = 'SESSAO VALIDA';
