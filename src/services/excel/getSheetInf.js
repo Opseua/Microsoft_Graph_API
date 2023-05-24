@@ -38,6 +38,7 @@ async function getSheetInf() {
             config.sheetTabId = res.value[0].id;
             config.sheetTabName = res.value[0].name;
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+            await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
             msg = `ABA NOME: ${res.value[0].name} | ABA ID: ${res.value[0].id}`;
             ret = true;
         } else {

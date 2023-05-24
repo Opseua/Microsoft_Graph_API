@@ -37,6 +37,7 @@ async function refreshToken() {
             config.refresh = res.refresh_token;
             config.expireInRefresh = Date.now() + (res.expires_in * 1000); // + 1 hora
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+            await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
             msg = 'OK REFRESH TOKEN';
             ret = true;
         }

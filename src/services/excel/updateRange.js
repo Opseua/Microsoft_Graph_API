@@ -15,7 +15,7 @@ async function createSession(inf) {
     return await funCreateSession(inf);
 }
 
-let celula = 'TESTE!C';
+let celula = 'TESTE!A';
 let numero = 10;
 
 async function updateRange(inf) {
@@ -60,10 +60,10 @@ export default updateRange
 
 
 
-function loop() {
+async function loop() {
     for (let i = 0; i < 20; i++) {
-        setTimeout(function () {
-            updateRange()
+        setTimeout(async function () {
+            const ret = await updateRange()
         }, i * 3000);
     }
 }

@@ -45,6 +45,7 @@ async function createSession() {
         config.session = res.id;
         config.expireInSession = Date.now() + (10*60000); // + X minutos
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+        await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
         msg = 'OK CREATE SESSION';
         ret = true;
       }
