@@ -1,14 +1,13 @@
-async function api(inf_ok) {
+async function api(val) {
 
   const inf = {
-    url: inf_ok.url,
-    method: inf_ok.method,
-    headers: inf_ok.headers,
-    body: inf_ok.body
+    url: val.url,
+    method: val.method,
+    headers: val.headers,
+    body: val.body
   };
 
-  if (typeof fetch == "undefined") {
-    // Google App Script
+  if (typeof fetch == undefined) { // -------------------- Google App Script
     try {
       var req = UrlFetchApp.fetch(inf.url, {
         'method': inf.method,
@@ -25,8 +24,7 @@ async function api(inf_ok) {
       //console.log('API: ERRO Google App Script');
       return error.message;
     }
-  } else {
-    // JavaScript
+  } else { // ---------------------------------------------- JavaScript
     try {
       var req = await fetch(inf.url, {
         method: inf.method,
@@ -42,7 +40,6 @@ async function api(inf_ok) {
       return error;
     }
   }
-
 }
 export default api
 

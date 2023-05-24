@@ -21,6 +21,9 @@ const sheetRange = config.sheetRange
 const token = config.token
 const session = config.session
 
+let celula = 'TESTE!B';
+let numero = 10;
+
 // INFORMACOES EM JSON (fixo)
 async function updateRange(inf) {
 
@@ -31,9 +34,11 @@ async function updateRange(inf) {
         session = inf;
     }
 
-    const corpo = { "values": [["Test"]] };
+    numero += 1;
+
+    const corpo = { "values": [[`${celula}${numero}`]] };
     const requisicao = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetRange}')`,
+        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${celula}${numero}')`,
         method: 'PATCH',
         headers: {
             'Content-Type': 'Application/Json',
@@ -43,34 +48,39 @@ async function updateRange(inf) {
         body: corpo
     };
     const re = await api(requisicao);
-    console.log("aaaaaaa")
-    console.log(re)
-    //const res = JSON.parse(re);
-    //console.log(res)
-    //return res;
-    return re;
+    const res = JSON.parse(re);
+    return res;
 }
 
 async function run() {
-    const resultado = await updateRange()
-
-    console.log(resultado)
-    return
-
-    if (resultado.error.code == 'undefined') {
-        console.log(resultado);
-    }
-    else if (resultado.error.code == 'InvalidAuthenticationToken') {
-        console.log('TOKEN INVALIDO');
+    let msg = '';
+    let resultado = await updateRange()
+    if ("values" in resultado) {
+        msg = resultado.values[0];
     }
     else if (resultado.error.code == 'InvalidSession') {
-        console.log('SESSAO INVALIDA');
         const session = await createSession();
-        const resultado = await updateRange(session);
-        console.log(resultado.values[0]);
+        resultado = await updateRange(session);
+        if ("values" in resultado) {
+            msg = resultado.values[0];
+        } else {
+            msg = resultado.error.message;
+        }
     } else {
-        console.log("OUTRO ERRO");
+        msg = resultado.error.message;
     }
-
+    console.log(msg)
 }
-run()
+
+
+
+function executarLoopComAtraso() {
+    for (let i = 0; i < 20; i++) {
+        setTimeout(function () {
+            run()
+        }, i * 3000); // Multiplica o índice da iteração pelo tempo de atraso (5000 ms = 5 segundos)
+    }
+}
+
+// Chamar a função para iniciar o loop com atraso
+executarLoopComAtraso();
