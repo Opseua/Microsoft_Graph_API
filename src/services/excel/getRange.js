@@ -48,6 +48,3 @@ async function getRange(inf) {
     console.log(msg)
 }
 export default getRange
-
-
-getRange()
