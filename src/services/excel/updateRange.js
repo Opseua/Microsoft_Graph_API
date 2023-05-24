@@ -2,85 +2,69 @@ import fs from 'fs';
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
-let fun1;
+let funApi;
 async function api(inf) {
     const module = await import('../../resources/api.js');
-    fun1 = module.default;
-    return await fun1(inf);
+    funApi = module.default;
+    return await funApi(inf);
 }
-let fun2;
+let funCreateSession;
 async function createSession(inf) {
     const module = await import('./createSession.js');
-    fun2 = module.default;
-    return await fun2(inf);
+    funCreateSession = module.default;
+    return await funCreateSession(inf);
 }
 
-const fileId = config.fileId
-const sheetTabName = config.sheetTabName
-const sheetRange = config.sheetRange
-const token = config.token
-const session = config.session
-
-let celula = 'TESTE!B';
+let celula = 'TESTE!C';
 let numero = 10;
 
-// INFORMACOES EM JSON (fixo)
 async function updateRange(inf) {
-
-    let session = '';
-    if (inf === undefined) {
-        session = config.session
-    } else {
-        session = inf;
-    }
-
-    numero += 1;
-
-    const corpo = { "values": [[`${celula}${numero}`]] };
-    const requisicao = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${celula}${numero}')`,
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'Application/Json',
-            'authorization': `Bearer ${token}`,
-            'workbook-session-id': `${session}`
-        },
-        body: corpo
-    };
-    const re = await api(requisicao);
-    const res = JSON.parse(re);
-    return res;
-}
-
-async function run() {
     let msg = '';
-    let resultado = await updateRange()
-    if ("values" in resultado) {
-        msg = resultado.values[0];
-    }
-    else if (resultado.error.code == 'InvalidSession') {
-        const session = await createSession();
-        resultado = await updateRange(session);
-        if ("values" in resultado) {
-            msg = resultado.values[0];
-        } else {
-            msg = resultado.error.message;
-        }
+    let ret = false;
+    const retcreateSession = await createSession();
+    if (!retcreateSession) {
+        let msg = 'ERRO AO CRIAR SESSAO';
     } else {
-        msg = resultado.error.message;
+        const fileId = config.fileId;
+        const sheetTabName = config.sheetTabName;
+        const sheetRange = config.sheetRange;
+        const token = config.token;
+        const session = config.session;
+        numero += 1;
+        const corpo = { "values": [[`${celula}${numero}`]] };
+        const requisicao = {
+            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${celula}${numero}')`,
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'Application/Json',
+                'authorization': `Bearer ${token}`,
+                'workbook-session-id': `${session}`
+            },
+            body: corpo
+        };
+        const re = await api(requisicao);
+        const res = JSON.parse(re);
+        if ("values" in res) {
+            msg = res.values[0];
+            ret = true;
+        }
+        else {
+            msg = res.error.message;
+        }
     }
-    console.log(msg)
+
+    console.log(msg);
+    return ret
 }
+export default updateRange
 
 
 
 function executarLoopComAtraso() {
     for (let i = 0; i < 20; i++) {
         setTimeout(function () {
-            run()
-        }, i * 3000); // Multiplica o índice da iteração pelo tempo de atraso (5000 ms = 5 segundos)
+            updateRange()
+        }, i * 3000);
     }
 }
-
-// Chamar a função para iniciar o loop com atraso
 executarLoopComAtraso();

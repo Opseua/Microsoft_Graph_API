@@ -43,7 +43,7 @@ async function createSession() {
       res = JSON.parse(res);
       if ("persistChanges" in res) {
         config.session = res.id;
-        config.expireInSession = Date.now() + 1800000; // AGORA + 30 minutos
+        config.expireInSession = Date.now() + 1800000; // + 30 minutos
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
         msg = 'OK CREATE SESSION';
         ret = true;
@@ -58,5 +58,3 @@ async function createSession() {
   return ret
 }
 export default createSession
-
-createSession()
