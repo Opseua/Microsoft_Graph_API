@@ -18,16 +18,16 @@ async function createSession(inf) {
 async function getRange(inf) {
     let msg = '';
     let ret = false;
-    const retcreateSession = await createSession();
-    if (!retcreateSession) {
+    const retCreateSession = await createSession();
+    if (!retCreateSession) {
         msg = 'ERRO AO CRIAR SESSAO';
     } else {
         const fileId = config.fileId;
-        const sheetTabId = config.sheetTabId;
+        const sheetTabIdINF = config.sheetTabIdINF;
         const token = config.token;
         const session = config.session;
         const requisicao = {
-            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets/${sheetTabId}/range(address='A2')`,
+            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets/${sheetTabIdINF}/range(address='A2')`,
             method: 'GET',
             headers: {
                 'authorization': `Bearer ${token}`,
@@ -37,14 +37,26 @@ async function getRange(inf) {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("values" in res) {
-            msg = `RETORNO: ${res.values[0]}`;
-            ret = true;
+            if (JSON.stringify(res.values[0]).includes('\\":\\"')) {
+                msg = JSON.parse(`{${res.values[0]}  "x":"x"}`);
+                msg = {
+                    aba: msg.aba,
+                    col: `${msg.range_ini}`,
+                    lin: `${msg.lin_vazia}`
+                };;
+            } else {
+                msg = `RETORNO: ${res.values[0]}`;
+            }
+            //ret = true;
+            ret = msg;
         }
         else {
             msg = res.error.code;
         }
     }
 
-    console.log(msg)
+    console.log(msg);
+    return ret
 }
 export default getRange
+

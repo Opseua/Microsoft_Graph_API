@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import fs from 'fs';
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
@@ -35,11 +36,11 @@ async function getSheetInf() {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("value" in res) {
-            config.sheetTabId = res.value[0].id;
-            config.sheetTabName = res.value[0].name;
+            config.sheetTabId = res.value[1].id;
+            config.sheetTabName = res.value[1].name;
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
             await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-            msg = `ABA NOME: ${res.value[0].name} | ABA ID: ${res.value[0].id}`;
+            msg = `ABA NOME: ${res.value[1].name} | ABA ID: ${res.value[1].id}`;
             ret = true;
         } else {
             msg = 'ERRO AO BUSCAR INFORMACOES DA PLANILHA';
@@ -50,4 +51,3 @@ async function getSheetInf() {
     return ret
 }
 export default getSheetInf
-

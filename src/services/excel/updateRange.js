@@ -14,26 +14,40 @@ async function createSession(inf) {
     funCreateSession = module.default;
     return await funCreateSession(inf);
 }
+let funGetRange;
+async function getRange(inf) {
+    const module = await import('./getRange.js');
+    funGetRange = module.default;
+    return await funGetRange(inf);
+}
 
-let celula = 'TESTE!A';
-let numero = 10;
+let fileId = '';
+let retGetRange = '';
+let sheetTabName = '';
+let sheetCol = '';
+let sheetLin = '';
+let token = '';
+let session = '';
 
 async function updateRange(inf) {
     let msg = '';
     let ret = false;
-    const retcreateSession = await createSession();
-    if (!retcreateSession) {
+    const retCreateSession = await createSession();
+    if (!retCreateSession) {
         msg = 'ERRO AO CRIAR SESSAO';
     } else {
-        const fileId = config.fileId;
-        const sheetTabName = config.sheetTabName;
-        const sheetRange = config.sheetRange;
-        const token = config.token;
-        const session = config.session;
-        numero += 1;
-        const corpo = { "values": [[`${celula}${numero}`]] };
+        if (sheetLin == 0) {
+            fileId = config.fileId;
+            retGetRange = await getRange();
+            sheetTabName = retGetRange.aba;
+            sheetCol = `${retGetRange.col}`;
+            sheetLin = Number(retGetRange.lin);
+            token = config.token;
+            session = config.session;
+        };
+        const corpo = { "values": [[`LINHA: ${sheetLin}`]] };
         const requisicao = {
-            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${celula}${numero}')`,
+            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
             method: 'PATCH',
             headers: {
                 'Content-Type': 'Application/Json',
@@ -45,8 +59,9 @@ async function updateRange(inf) {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("values" in res) {
-            msg = `ENVIADO: ${res.values[0]}`;
+            msg = `ENVIADO→ ${res.values[0]}`;
             ret = true;
+            sheetLin += 1;
         }
         else {
             msg = res.error.message;
@@ -65,5 +80,5 @@ for (let i = 0; i < 20; i++) {
     if (ret === false) {
         break;
     }
-    await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
+    await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
 }
