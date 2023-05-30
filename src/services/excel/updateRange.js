@@ -30,22 +30,22 @@ let token = '';
 let session = '';
 
 async function updateRange(inf) {
-    let msg = '';
-    let ret = false;
-    const retCreateSession = await createSession();
-    if (!retCreateSession) {
-        msg = 'ERRO AO CRIAR SESSAO';
+    let ret = {
+        'ret': false
+    };
+    retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
+    if (!retGetRange.ret) {
+        ret['msg'] = `ERRO AO CRIAR SESSAO`;
     } else {
         if (sheetLin == 0) {
             fileId = config.fileId;
-            retGetRange = await getRange();
-            sheetTabName = retGetRange.aba;
-            sheetCol = `${retGetRange.col}`;
-            sheetLin = Number(retGetRange.lin);
+            sheetTabName = inf.sheetTabName;
+            sheetCol = `A`;
+            sheetLin = Number(retGetRange.values);
             token = config.token;
             session = config.session;
         };
-        const corpo = { "values": [[`LINHA: ${sheetLin}`]] };
+        const corpo = { "values": [[`${sheetLin} | ${inf.send}`]] };
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
             method: 'PATCH',
@@ -59,24 +59,24 @@ async function updateRange(inf) {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("values" in res) {
-            msg = `ENVIADO→ ${res.values[0]}`;
-            ret = true;
+            ret['msg'] = `ENVIADO→ "${sheetTabName}" ${sheetCol}${sheetLin}`;
+            ret['ret'] = true;
             sheetLin += 1;
         }
         else {
-            msg = res.error.message;
+            ret['msg'] = `${res.error.message}`;
         }
     }
 
-    console.log(msg);
+    console.log(ret.msg);
     return ret
 }
 export default updateRange
 
 
 
-for (let i = 0; i < 20; i++) {
-    const ret = await updateRange();
+for (let i = 0; i < 1; i++) {
+    const ret = await updateRange({ sheetTabName: 'SEAU', send: 'OLÁ' });
     if (ret === false) {
         break;
     }

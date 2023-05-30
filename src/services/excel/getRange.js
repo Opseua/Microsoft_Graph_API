@@ -14,20 +14,28 @@ async function createSession(inf) {
     fun2 = module.default;
     return await fun2(inf);
 }
+let fun3;
+async function getSheetInf(inf) {
+    const module = await import('./getSheetInf.js');
+    fun3 = module.default;
+    return await fun3(inf);
+}
 
 async function getRange(inf) {
-    let msg = '';
-    let ret = false;
+    let ret = {
+        'ret': false
+    };
     const retCreateSession = await createSession();
     if (!retCreateSession) {
-        msg = 'ERRO AO CRIAR SESSAO';
+        ret['msg'] = `ERRO AO CRIAR SESSAO`;
     } else {
         const fileId = config.fileId;
-        const sheetTabIdINF = config.sheetTabIdINF;
+        const retGetSheetInf = await getSheetInf({ sheetTabName: inf.sheetTabName });
+        const sheetTabId = retGetSheetInf.sheetTabId;
         const token = config.token;
         const session = config.session;
         const requisicao = {
-            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets/${sheetTabIdINF}/range(address='A2')`,
+            url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets/${sheetTabId}/range(address='A1')`,
             method: 'GET',
             headers: {
                 'authorization': `Bearer ${token}`,
@@ -43,20 +51,20 @@ async function getRange(inf) {
                     aba: msg.aba,
                     col: `${msg.range_ini}`,
                     lin: `${msg.lin_vazia}`
-                };;
+                };
+                ret['msg'] = `${msg}`;
             } else {
-                msg = `RETORNO: ${res.values[0]}`;
+                ret['values'] = `${res.values[0]}`;
+                ret['msg'] = `RETORNO: ${res.values[0]}`;
             }
-            //ret = true;
-            ret = msg;
+            ret['ret'] = true;
         }
         else {
-            msg = res.error.code;
+            ret['msg'] = `${res.error.code}`;
         }
     }
 
-    console.log(msg);
+    console.log(ret.msg);
     return ret
 }
 export default getRange
-

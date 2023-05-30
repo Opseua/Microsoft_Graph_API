@@ -17,15 +17,18 @@ async function refreshToken(inf) {
     return await funRefreshToken(inf);
 }
 
-async function getSheetInf() {
-    let msg = '';
-    let ret = false;
+async function getSheetInf(inf) {
+    let ret = {
+        'ret': false
+    };
     const retRefreshToken = await refreshToken();
     if (!retRefreshToken) {
-        msg = 'ERRO AO ATUALIZAR TOKEN';
+        ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
     } else {
         const fileId = config.fileId;
         const token = config.token;
+        let sheetTabName = inf.sheetTabName;
+        let sheetTabId = '';
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets`,
             method: 'GET',
@@ -36,18 +39,38 @@ async function getSheetInf() {
         let res = await api(requisicao);
         res = JSON.parse(res);
         if ("value" in res) {
-            config.sheetTabId = res.value[1].id;
-            config.sheetTabName = res.value[1].name;
-            fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-            await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-            msg = `ABA NOME: ${res.value[1].name} | ABA ID: ${res.value[1].id}`;
-            ret = true;
+            if (sheetTabName in config) {
+                sheetTabId = config[sheetTabName];
+                ret['sheetTabId'] = sheetTabId;
+                ret['msg'] = `ABA NOME: ${sheetTabName} | ABA ID: ${sheetTabId}`;
+                ret['ret'] = true;
+            } else {
+                const matchingObject = res.value.find(function (obj) {
+                    return obj.name === sheetTabName;
+                });
+                sheetTabId = matchingObject ? matchingObject.id : null;
+                if (sheetTabId == null) {
+                    ret['msg'] = `ABA "${sheetTabName}" NAO ENCONTRADA`;
+                } else {
+                    const novaChave = sheetTabName;
+                    const valorNovaChave = sheetTabId;
+                    config[novaChave] = valorNovaChave;
+                    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                    await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
+                    ret['sheetTabId'] = sheetTabId;
+                    ret['msg'] = `ABA NOME: ${sheetTabName} | ABA ID: ${sheetTabId}`;
+                    ret['ret'] = true;
+                    
+                }
+            }
         } else {
-            msg = 'ERRO AO BUSCAR INFORMACOES DA PLANILHA';
+            ret['msg'] = `ERRO AO BUSCAR INFORMACOES DA PLANILHA`;
         }
     }
 
-    console.log(msg);
+    console.log(ret.msg);
     return ret
 }
 export default getSheetInf
+
+

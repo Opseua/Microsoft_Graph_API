@@ -17,15 +17,16 @@ async function refreshToken(inf) {
 }
 
 async function createSession() {
-  let msg = '';
-  let ret = false;
+  let ret = {
+    'ret': false
+};
   const retRefreshToken = await refreshToken();
   if (!retRefreshToken) {
-    msg = 'ERRO AO ATUALIZAR TOKEN';
+    ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
   } else {
     if (Date.now() < (config.expireInSession - 3000)) {
-      msg = 'SESSAO VALIDA';
-      ret = true;
+      ret['msg'] = `SESSAO VALIDA`;
+      ret['ret'] = true;
     } else {
       const fileId = config.fileId;
       const token = config.token;
@@ -46,16 +47,16 @@ async function createSession() {
         config.expireInSession = Date.now() + (10*60000); // + X minutos
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
         await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-        msg = 'OK CREATE SESSION';
-        ret = true;
+        ret['msg'] = `OK CREATE SESSION`;
+        ret['ret'] = true;
       }
       else {
-        msg = res.error.code;
+        ret['msg'] = `${res.error.code}`;
       }
     }
   }
 
-  console.log(msg);
+  console.log(ret.msg);
   return ret
 }
 export default createSession

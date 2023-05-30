@@ -11,11 +11,12 @@ async function api(inf) {
 }
 
 async function refreshToken() {
-    let msg = '';
-    let ret = false;
+    let ret = {
+        'ret': false
+    };
     if (Date.now() < (config.expireInRefresh - 3000)) {
-        msg = 'TOKEN VALIDO';
-        ret = true;
+        ret['msg'] = `TOKEN VALIDO`;
+        ret['ret'] = true;
     } else {
         const clientId = config.clientId;
         const refresh = config.refresh;
@@ -38,16 +39,16 @@ async function refreshToken() {
             config.expireInRefresh = Date.now() + (res.expires_in * 1000); // + 1 hora
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
             await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-            msg = 'OK REFRESH TOKEN';
-            ret = true;
+            ret['msg'] = `OK REFRESH TOKEN`;
+            ret['ret'] = true;
         }
         else {
-            msg = res.error;
-            ret = false;
+            ret['msg'] = `${res.error}`;
+            ret['ret'] = false;
         }
     }
 
-    console.log(msg);
+    console.log(ret.msg);
     return ret
 }
 export default refreshToken

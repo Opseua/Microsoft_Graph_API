@@ -17,11 +17,12 @@ async function refreshToken(inf) {
 }
 
 async function listAllFilesByType() {
-    let msg = '';
-    let ret = false;
+    let ret = {
+        'ret': false
+    };
     const retRefreshToken = await refreshToken();
     if (!retRefreshToken) {
-        msg = 'ERRO AO ATUALIZAR TOKEN';
+        ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
     } else {
         const query = config.fileName;
         const token = config.token;
@@ -36,21 +37,22 @@ async function listAllFilesByType() {
         res = JSON.parse(res);
         if ("value" in res) {
             if (res.value.length == 0) {
-                msg = 'NENHUM ARQUIVO ENCONTRADO';
+                ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
             } else {
                 config.fileId = res.value[0].id;
                 fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
                 await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-                msg = `ARQUIVO NOME: ${res.value[0].name} | ARQUIVO ID: ${res.value[0].id}`;
-                ret = true;
+                ret['msg'] = `ARQUIVO NOME: ${res.value[0].name} | ARQUIVO ID: ${res.value[0].id}`;
+                ret['ret'] = true;
             }
         }
         else {
-            msg = res.error.code;
+            ret['msg'] = `${res.error.code}`;
         }
     }
 
-    console.log(msg);
+    console.log(ret.msg);
     return ret
 }
 export default listAllFilesByType
+listAllFilesByType()
