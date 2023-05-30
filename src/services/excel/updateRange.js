@@ -8,12 +8,6 @@ async function api(inf) {
     funApi = module.default;
     return await funApi(inf);
 }
-let funCreateSession;
-async function createSession(inf) {
-    const module = await import('./createSession.js');
-    funCreateSession = module.default;
-    return await funCreateSession(inf);
-}
 let funGetRange;
 async function getRange(inf) {
     const module = await import('./getRange.js');
@@ -33,18 +27,23 @@ async function updateRange(inf) {
     let ret = {
         'ret': false
     };
-    retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
-    if (!retGetRange.ret) {
-        ret['msg'] = `ERRO AO CRIAR SESSAO`;
-    } else {
-        if (sheetLin == 0) {
+
+    if (sheetLin == '') {
+        retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
+        if (!retGetRange.ret) {
+            sheetLin = 0;
+        } else {
             fileId = config.fileId;
             sheetTabName = inf.sheetTabName;
             sheetCol = `A`;
             sheetLin = Number(retGetRange.values);
             token = config.token;
             session = config.session;
-        };
+        }
+    }
+    if (sheetLin == 0) {
+        ret['msg'] = `ERRO AO OBTER RANGE`;
+    } else {
         const corpo = { "values": [[`${sheetLin} | ${inf.send}`]] };
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
@@ -75,7 +74,7 @@ export default updateRange
 
 
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 20; i++) {
     const ret = await updateRange({ sheetTabName: 'SEAU', send: 'OLÁ' });
     if (ret === false) {
         break;

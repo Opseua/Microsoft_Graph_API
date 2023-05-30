@@ -55,4 +55,3 @@ async function listAllFilesByType() {
     return ret
 }
 export default listAllFilesByType
-listAllFilesByType()
