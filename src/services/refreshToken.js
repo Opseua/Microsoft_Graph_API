@@ -3,6 +3,7 @@ import fs from 'fs';
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
+
 let funApi;
 async function api(inf) {
     const module = await import('../resources/api.js');

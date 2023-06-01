@@ -24,6 +24,7 @@ let token = '';
 let session = '';
 
 async function updateRange(inf) {
+    console.log(`NUMERO ${sheetLin}`)
     let ret = {
         'ret': false
     };
@@ -43,7 +44,7 @@ async function updateRange(inf) {
     }
     if (sheetLin == 0) {
         ret['msg'] = `ERRO AO OBTER RANGE`;
-    } else {
+    } else if (sheetLin > 0) {
         const corpo = { "values": [[`${sheetLin} | ${inf.send}`]] };
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
@@ -74,8 +75,8 @@ export default updateRange
 
 
 
-for (let i = 0; i < 20; i++) {
-    const ret = await updateRange({ sheetTabName: 'SEAU', send: 'OLÁ' });
+for (let i = 0; i < 5; i++) {
+    const ret = await updateRange({ sheetTabName: 'HAUPC', send: 'OLÁ' });
     if (ret === false) {
         break;
     }
