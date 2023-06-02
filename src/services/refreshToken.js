@@ -1,3 +1,4 @@
+import { clearConsole } from './clearConsole.js';
 
 import fs from 'fs';
 const configFile = fs.readFileSync('config.json');
