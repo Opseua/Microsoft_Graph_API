@@ -1,5 +1,5 @@
 node_modules
-.z_tempCodeRunner.js
+*.z_tempCodeRunner*
 config.json
 token.txt
 
