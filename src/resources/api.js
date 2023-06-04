@@ -1,5 +1,4 @@
 async function api(inf_ok) {
-
   const inf = {
     url: inf_ok.url,
     method: inf_ok.method,
@@ -13,7 +12,7 @@ async function api(inf_ok) {
     try {
       var req = UrlFetchApp.fetch(inf.url, {
         'method': inf.method,
-        'payload': inf.method === "POST" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
+        'payload': inf.method === "POST" || inf.method === "PATCH" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
         'headers': inf.headers,
         redirect: 'follow',
         keepalive: true,
@@ -32,7 +31,7 @@ async function api(inf_ok) {
     try {
       var req = await fetch(inf.url, {
         method: inf.method,
-        body: inf.method === "POST" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
+        body: inf.method === "POST" || inf.method === "PATCH" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
         headers: inf.headers,
         redirect: 'follow',
         keepalive: true
@@ -56,13 +55,11 @@ export default api
 
 
 /* async function teste() {
-  const corpo = String.raw`ESSA \ É / " A ' INFORMACAO`;
-  //const corpo = { teste: 'OLA TUDO BEM' };
   const requisicao = {
     url: 'https://ntfy.sh/OPSEUA',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: valor
+    body: String.raw`ESSA \ É / " A ' INFORMACAO`
   };
   const retApi = await api(requisicao);
   console.log(retApi.res)
@@ -78,12 +75,11 @@ teste() */
   formData.append('client_id', 'c683fd93-XXXXXXXXXXXXX');
   formData.append('client_secret', '0008Q~XXXXXXXXXX');
   formData.append('resource', 'https://graph.microsoft.com');
-  const corpo = formData.toString()
   const requisicao = {
     url: 'https://login.microsoft.com/c5a6c78e-7c99-4631-bb7f-27660b938469/oauth2/token',
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: corpo
+    body: formData.toString()
   };
   const retApi = await api(requisicao);
   console.log(retApi.res)

@@ -17,9 +17,7 @@ async function refreshToken(inf) {
 }
 
 async function createSession() {
-  let ret = {
-    'ret': false
-};
+  let ret = { 'ret': false };
   const retRefreshToken = await refreshToken();
   if (!retRefreshToken) {
     ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
@@ -40,11 +38,11 @@ async function createSession() {
         },
         body: corpo
       };
-      let res = await api(requisicao);
-      res = JSON.parse(res);
+      const retApi = await api(requisicao);
+      const res = JSON.parse(retApi.res);
       if ("persistChanges" in res) {
         config.session = res.id;
-        config.expireInSession = Date.now() + (10*60000); // + X minutos
+        config.expireInSession = Date.now() + (10 * 60000); // + X minutos
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
         await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
         ret['msg'] = `OK CREATE SESSION`;

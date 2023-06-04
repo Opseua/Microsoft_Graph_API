@@ -1,9 +1,8 @@
-import { clearConsole } from './clearConsole.js';
+import { clearConsole } from '../clearConsole.js';
 
 import fs from 'fs';
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
 
 let funApi;
 async function api(inf) {
@@ -13,9 +12,7 @@ async function api(inf) {
 }
 
 async function refreshToken() {
-    let ret = {
-        'ret': false
-    };
+    const ret = { 'ret': false };
     if (Date.now() < (config.expireInRefresh - 3000)) {
         ret['msg'] = `TOKEN VALIDO`;
         ret['ret'] = true;
@@ -26,15 +23,14 @@ async function refreshToken() {
         formData.append('client_id', clientId);
         formData.append('refresh_token', refresh);
         formData.append('grant_type', 'REFRESH_TOKEN');
-        const corpo = formData.toString();
         const requisicao = {
             url: `https://login.microsoftonline.com/common/oauth2/v2.0/token`,
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: corpo
+            body: formData.toString()
         };
-        let res = await api(requisicao);
-        res = JSON.parse(res);
+        const retApi = await api(requisicao);
+        const res = JSON.parse(retApi.res);
         if ("access_token" in res) {
             config.token = res.access_token;
             config.refresh = res.refresh_token;

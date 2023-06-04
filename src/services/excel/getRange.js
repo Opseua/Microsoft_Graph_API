@@ -22,9 +22,7 @@ async function getSheetInf(inf) {
 }
 
 async function getRange(inf) {
-    let ret = {
-        'ret': false
-    };
+    let ret = { 'ret': false };
     const retCreateSession = await createSession();
     if (!retCreateSession) {
         ret['msg'] = `ERRO AO CRIAR SESSAO`;
@@ -42,8 +40,8 @@ async function getRange(inf) {
                 'workbook-session-id': `${session}`
             }
         };
-        let res = await api(requisicao);
-        res = JSON.parse(res);
+        const retApi = await api(requisicao);
+        const res = JSON.parse(retApi.res);
         if ("values" in res) {
             if (JSON.stringify(res.values[0]).includes('\\":\\"')) {
                 msg = JSON.parse(`{${res.values[0]}  "x":"x"}`);

@@ -15,25 +15,28 @@ async function getRange(inf) {
     return await funGetRange(inf);
 }
 
-let fileId = '';
-let retGetRange = '';
-let sheetTabName = '';
-let sheetCol = '';
-let sheetLin = '';
-let token = '';
-let session = '';
+let fileId;
+let retGetRange
+let sheetTabName
+let sheetCol
+let sheetLin
+let token
+let session
+let run = 0
 
 async function updateRange(inf) {
-    console.log(`NUMERO ${sheetLin}`)
-    let ret = {
-        'ret': false
-    };
+    let ret = { 'ret': false };
+    //console.log(`NUMERO ${sheetLin}`)
 
-    if (sheetLin == '') {
+    if (run == 0) {
+        console.log('COMECOU')
         retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
         if (!retGetRange.ret) {
-            sheetLin = 0;
+            run = -1;
+            console.log('GET RANGE: ERRO');
         } else {
+            run = 1;
+            console.log('RODAR');
             fileId = config.fileId;
             sheetTabName = inf.sheetTabName;
             sheetCol = `A`;
@@ -42,10 +45,8 @@ async function updateRange(inf) {
             session = config.session;
         }
     }
-    if (sheetLin == 0) {
-        ret['msg'] = `ERRO AO OBTER RANGE`;
-    } else if (sheetLin > 0) {
-        const corpo = { "values": [[`${sheetLin} | ${inf.send}`]] };
+
+    if (run == 1) {
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
             method: 'PATCH',
@@ -54,17 +55,19 @@ async function updateRange(inf) {
                 'authorization': `Bearer ${token}`,
                 'workbook-session-id': `${session}`
             },
-            body: corpo
+            body: { 'values': [[`${sheetLin} | ${inf.send}`]] }
         };
-        let res = await api(requisicao);
-        res = JSON.parse(res);
-        if ("values" in res) {
+        const retApi = await api(requisicao);
+        const res = JSON.parse(retApi.res);
+        //console.log(JSON.stringify(requisicao.body))
+        //return
+        if (!("values" in res)) {
+            run = -1;
+            ret['msg'] = `${res.error.message}`;
+        } else {
             ret['msg'] = `ENVIADO→ "${sheetTabName}" ${sheetCol}${sheetLin}`;
             ret['ret'] = true;
             sheetLin += 1;
-        }
-        else {
-            ret['msg'] = `${res.error.message}`;
         }
     }
 
@@ -75,7 +78,7 @@ export default updateRange
 
 
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 1; i++) {
     const ret = await updateRange({ sheetTabName: 'HAUPC', send: 'OLÁ' });
     if (ret === false) {
         break;

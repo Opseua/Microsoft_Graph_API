@@ -17,9 +17,7 @@ async function refreshToken(inf) {
 }
 
 async function getSheetInf(inf) {
-    let ret = {
-        'ret': false
-    };
+    let ret = { 'ret': false };
     const retRefreshToken = await refreshToken();
     if (!retRefreshToken) {
         ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
@@ -35,8 +33,8 @@ async function getSheetInf(inf) {
                 'authorization': `Bearer ${token}`
             }
         };
-        let res = await api(requisicao);
-        res = JSON.parse(res);
+        const retApi = await api(requisicao);
+        const res = JSON.parse(retApi.res);
         if ("value" in res) {
             if (sheetTabName in config) {
                 sheetTabId = config[sheetTabName];
@@ -59,7 +57,7 @@ async function getSheetInf(inf) {
                     ret['sheetTabId'] = sheetTabId;
                     ret['msg'] = `ABA NOME: ${sheetTabName} | ABA ID: ${sheetTabId}`;
                     ret['ret'] = true;
-                    
+
                 }
             }
         } else {
