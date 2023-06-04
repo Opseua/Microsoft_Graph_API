@@ -26,7 +26,7 @@ async function getSheetInf(inf) {
         };
         const retApi = await api(requisicao);
         const res = JSON.parse(retApi.res);
-        if ("value" in res) {
+        if ('value' in res) {
             if (sheetTabName in config) {
                 sheetTabId = config[sheetTabName];
                 ret['sheetTabId'] = sheetTabId;

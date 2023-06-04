@@ -8,11 +8,11 @@ async function api(inf_ok) {
 
   const ret = { ret: false };
 
-  if (typeof fetch == "undefined") { // ################ Google App Script
+  if (typeof fetch == 'undefined') { // ################ Google App Script
     try {
       var req = UrlFetchApp.fetch(inf.url, {
         'method': inf.method,
-        'payload': inf.method === "POST" || inf.method === "PATCH" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
+        'payload': inf.method === 'POST' || inf.method === 'PATCH' ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
         'headers': inf.headers,
         redirect: 'follow',
         keepalive: true,
@@ -31,7 +31,7 @@ async function api(inf_ok) {
     try {
       var req = await fetch(inf.url, {
         method: inf.method,
-        body: inf.method === "POST" || inf.method === "PATCH" ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
+        body: inf.method === 'POST' || inf.method === 'PATCH' ? typeof inf.body === 'object' ? JSON.stringify(inf.body) : inf.body : null,
         headers: inf.headers,
         redirect: 'follow',
         keepalive: true

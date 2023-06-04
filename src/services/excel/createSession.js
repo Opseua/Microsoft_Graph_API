@@ -19,7 +19,7 @@ async function createSession() {
     } else {
       const fileId = config.fileId;
       const token = config.token;
-      const corpo = { "persistChanges": true };
+      const corpo = { 'persistChanges': true };
       const requisicao = {
         url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
         method: 'POST',
@@ -31,7 +31,7 @@ async function createSession() {
       };
       const retApi = await api(requisicao);
       const res = JSON.parse(retApi.res);
-      if ("persistChanges" in res) {
+      if ('persistChanges' in res) {
         config.session = res.id;
         config.expireInSession = Date.now() + (10 * 60000); // + X minutos
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));

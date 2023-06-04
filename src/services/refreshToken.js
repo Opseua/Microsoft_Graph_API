@@ -27,7 +27,7 @@ async function refreshToken() {
         };
         const retApi = await api(requisicao);
         const res = JSON.parse(retApi.res);
-        if ("access_token" in res) {
+        if ('access_token' in res) {
             config.token = res.access_token;
             config.refresh = res.refresh_token;
             config.expireInRefresh = Date.now() + (res.expires_in * 1000); // + 1 hora

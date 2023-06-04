@@ -33,7 +33,7 @@ async function listAllFilesByType() {
         };
         let res = await api(requisicao);
         res = JSON.parse(res);
-        if ("value" in res) {
+        if ('value' in res) {
             if (res.value.length == 0) {
                 ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
             } else {

@@ -30,7 +30,7 @@ async function getRange(inf) {
         };
         const retApi = await api(requisicao);
         const res = JSON.parse(retApi.res);
-        if ("values" in res) {
+        if ('values' in res) {
             if (JSON.stringify(res.values[0]).includes('\\":\\"')) {
                 msg = JSON.parse(`{${res.values[0]}  "x":"x"}`);
                 msg = {

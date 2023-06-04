@@ -39,7 +39,7 @@ async function updateRange(inf) {
         };
         const retApi = await api(requisicao);
         const res = JSON.parse(retApi.res);
-        if (!("values" in res)) {
+        if (!('values' in res)) {
             run = -1;
             ret['msg'] = `${res.error.message}`;
         } else {
@@ -56,10 +56,10 @@ export default updateRange
 
 
 
-for (let i = 0; i < 5; i++) {
-    const ret = await updateRange({ sheetTabName: 'HAUPC', send: 'OLÁ' });
-    if (ret === false) {
-        break;
-    }
-    await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
-}
+// for (let i = 0; i < 5; i++) {
+//     const ret = await updateRange({ sheetTabName: 'HAUPC', send: 'OLÁ' });
+//     if (ret === false) {
+//         break;
+//     }
+//     await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
+// }
