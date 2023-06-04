@@ -9,7 +9,9 @@ console.log = async function () {
     if (messageCount >= 300) {
         console.clear();
         messageCount = 0;
+        console.log('CONSOLE LIMPO!')
     }
 
 };
+
 export { clearConsole, messageCount };
