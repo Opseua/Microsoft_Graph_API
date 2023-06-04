@@ -1,20 +1,11 @@
-import fs from 'fs';
+const imp1 = () => import('fs').then(module => module.default);
+const fs = await imp1();
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
-let funApi;
-async function api(inf) {
-  const module = await import('../../resources/api.js');
-  funApi = module.default;
-  return await funApi(inf);
-}
+const api = async (i) => (await import('../../resources/api.js')).default(i);
 
-let funRefreshToken;
-async function refreshToken(inf) {
-  const module = await import('../../services/refreshToken.js');
-  funRefreshToken = module.default;
-  return await funRefreshToken(inf);
-}
+const refreshToken = async (i) => (await import('../refreshToken.js')).default(i);
 
 async function createSession() {
   let ret = { 'ret': false };
@@ -58,3 +49,4 @@ async function createSession() {
   return ret
 }
 export default createSession
+

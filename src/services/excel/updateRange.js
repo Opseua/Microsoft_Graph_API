@@ -1,42 +1,23 @@
-import fs from 'fs';
+const imp1 = () => import('fs').then(module => module.default);
+const fs = await imp1();
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
-let funApi;
-async function api(inf) {
-    const module = await import('../../resources/api.js');
-    funApi = module.default;
-    return await funApi(inf);
-}
-let funGetRange;
-async function getRange(inf) {
-    const module = await import('./getRange.js');
-    funGetRange = module.default;
-    return await funGetRange(inf);
-}
+const api = async (i) => (await import('../../resources/api.js')).default(i);
 
-let fileId;
-let retGetRange
-let sheetTabName
-let sheetCol
-let sheetLin
-let token
-let session
-let run = 0
+const getRange = async (i) => (await import('./getRange.js')).default(i);
+
+let fileId, retGetRange, sheetTabName, sheetCol, sheetLin, token, session, run = 0
 
 async function updateRange(inf) {
     let ret = { 'ret': false };
-    //console.log(`NUMERO ${sheetLin}`)
-
     if (run == 0) {
-        console.log('COMECOU')
         retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
         if (!retGetRange.ret) {
             run = -1;
             console.log('GET RANGE: ERRO');
         } else {
             run = 1;
-            console.log('RODAR');
             fileId = config.fileId;
             sheetTabName = inf.sheetTabName;
             sheetCol = `A`;
@@ -45,7 +26,6 @@ async function updateRange(inf) {
             session = config.session;
         }
     }
-
     if (run == 1) {
         const requisicao = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
@@ -59,8 +39,6 @@ async function updateRange(inf) {
         };
         const retApi = await api(requisicao);
         const res = JSON.parse(retApi.res);
-        //console.log(JSON.stringify(requisicao.body))
-        //return
         if (!("values" in res)) {
             run = -1;
             ret['msg'] = `${res.error.message}`;
@@ -78,7 +56,7 @@ export default updateRange
 
 
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 5; i++) {
     const ret = await updateRange({ sheetTabName: 'HAUPC', send: 'OLÁ' });
     if (ret === false) {
         break;

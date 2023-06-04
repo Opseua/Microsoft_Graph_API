@@ -1,15 +1,11 @@
-import { clearConsole } from '../clearConsole.js';
+const clearConsole = await import('../clearConsole.js');
 
-import fs from 'fs';
+const imp1 = () => import('fs').then(module => module.default);
+const fs = await imp1();
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
-let funApi;
-async function api(inf) {
-    const module = await import('../resources/api.js');
-    funApi = module.default;
-    return await funApi(inf);
-}
+const api = async (i) => (await import('../resources/api.js')).default(i);
 
 async function refreshToken() {
     const ret = { 'ret': false };
