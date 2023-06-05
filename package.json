@@ -1,6 +1,7 @@
 {
     "type": "module",
     "dependencies": {
-        "fs": "^0.0.1-security"
+        "fs": "^0.0.1-security",
+        "isomorphic-ws": "^5.0.0"
     }
 }

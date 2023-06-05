@@ -1,4 +1,4 @@
-//const clearConsole = await import('./clearConsole.js');
+//await import('./clearConsole.js');
 
 let messageCount = 0;
 
@@ -15,5 +15,3 @@ console.log = async function () {
     }
 
 };
-
-export default clearConsole

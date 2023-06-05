@@ -1,16 +1,18 @@
-const clearConsole = await import('../clearConsole.js');
+await import('./../clearConsole.js');
 
 const imp1 = () => import('fs').then(module => module.default);
 const fs = await imp1();
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 
-const api = async (i) => (await import('../resources/api.js')).default(i);
+//const api = async (i) => (await import('../resources/api.js')).default(i);
+const { api } = await import('../resources/api.js');
 
 async function refreshToken() {
     const ret = { 'ret': false };
-    if (Date.now() < (config.expireInRefresh - 3000)) {
+    if (Date.now() < (config.expireInRefresh)) {
         ret['msg'] = `TOKEN VALIDO`;
+        ret['res'] = { 'token': config.token };
         ret['ret'] = true;
     } else {
         const clientId = config.clientId;
@@ -30,10 +32,10 @@ async function refreshToken() {
         if ('access_token' in res) {
             config.token = res.access_token;
             config.refresh = res.refresh_token;
-            config.expireInRefresh = Date.now() + (res.expires_in * 1000); // + 1 hora
+            config.expireInRefresh = Date.now() + ((res.expires_in - 60) * 1000); // + (59 minutos de validade)
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-            await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
             ret['msg'] = `OK REFRESH TOKEN`;
+            ret['res'] = { 'token': res.access_token };
             ret['ret'] = true;
         }
         else {
@@ -46,3 +48,4 @@ async function refreshToken() {
     return ret
 }
 export default refreshToken
+

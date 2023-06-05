@@ -48,7 +48,7 @@ async function api(inf_ok) {
 
   return ret
 }
-export default api
+export { api }
 
 
 

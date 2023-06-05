@@ -19,7 +19,7 @@ async function refreshToken(inf) {
 async function listAllFilesByType() {
     let ret = { 'ret': false };
     const retRefreshToken = await refreshToken();
-    if (!retRefreshToken) {
+    if (!retRefreshToken.ret) {
         ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
     } else {
         const query = config.fileName;
