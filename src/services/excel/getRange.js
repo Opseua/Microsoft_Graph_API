@@ -2,8 +2,8 @@ const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
-const createSession = async (i) => (await import('./createSession.js')).default(i);
-const getSheetInf = async (i) => (await import('./getSheetInf.js')).default(i);
+const { createSession } = await import('./createSession.js');
+const { getSheetInf } = await import('./getSheetInf.js');
 
 async function getRange(inf) {
     let ret = { 'ret': false };
@@ -52,5 +52,5 @@ async function getRange(inf) {
     console.log(ret.msg);
     return ret
 }
-export default getRange
+export { getRange }
 

@@ -1,5 +1,4 @@
-const imp1 = () => import('fs').then(module => module.default);
-const fs = await imp1();
+const fs = await import('fs');
 
 function writeFile(inf) {
 
@@ -24,11 +23,5 @@ function writeFile(inf) {
 
 }
 
-export default writeFile
+export { writeFile }
 
-
-import path from 'path';
-
-const projectRoot = path.resolve();
-
-console.log(projectRoot);

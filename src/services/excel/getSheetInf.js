@@ -2,7 +2,7 @@ const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
-const refreshToken = async (i) => (await import('../refreshToken.js')).default(i);
+const { refreshToken } = await import('../refreshToken.js');
 
 async function getSheetInf(inf) {
     let ret = { 'ret': false };
@@ -51,5 +51,5 @@ async function getSheetInf(inf) {
     console.log(ret.msg);
     return ret
 }
-export default getSheetInf
+export { getSheetInf }
 

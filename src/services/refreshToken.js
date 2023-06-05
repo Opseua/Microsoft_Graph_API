@@ -44,5 +44,5 @@ async function refreshToken() {
     console.log(ret.msg);
     return ret
 }
-export default refreshToken
+export { refreshToken }
 
