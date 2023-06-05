@@ -1,7 +1,9 @@
 const { addListener, globalObject } = await import('../../../../Chrome_Extension/globalObject.js');
 addListener(monitorGlobalObject);
 async function monitorGlobalObject(value) {
-    console.log('Valor de globalObject alterado 1:', value.inf);
+    if (value.inf.funcao == 'updateRange') {
+        await updateRange({ 'sheetTabName': 'YVIE', 'send': value.inf.inf });
+    }
 }
 //await new Promise(resolve => setTimeout(resolve, (2000)));
 //globalObject.inf = { 'funcao': 'nome', 'inf': 'VALOR AQUI' };
@@ -10,10 +12,7 @@ async function monitorGlobalObject(value) {
 const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
-//const api = async (i) => (await import('../../resources/api.js')).default(i);
 const { api } = await import('../../resources/api.js');
-
 const getRange = async (i) => (await import('./getRange.js')).default(i);
 
 let fileId, retGetRange, sheetTabName, sheetCol, sheetLin, token, session, run = 0

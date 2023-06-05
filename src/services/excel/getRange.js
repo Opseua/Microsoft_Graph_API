@@ -1,13 +1,8 @@
-const imp1 = () => import('fs').then(module => module.default);
-const fs = await imp1();
+const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
-//const api = async (i) => (await import('../../resources/api.js')).default(i);
 const { api } = await import('../../resources/api.js');
-
 const createSession = async (i) => (await import('./createSession.js')).default(i);
-
 const getSheetInf = async (i) => (await import('./getSheetInf.js')).default(i);
 
 async function getRange(inf) {

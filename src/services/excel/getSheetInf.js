@@ -1,11 +1,7 @@
-const imp1 = () => import('fs').then(module => module.default);
-const fs = await imp1();
+const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
-//const api = async (i) => (await import('../../resources/api.js')).default(i);
 const { api } = await import('../../resources/api.js');
-
 const refreshToken = async (i) => (await import('../refreshToken.js')).default(i);
 
 async function getSheetInf(inf) {

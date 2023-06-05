@@ -1,11 +1,7 @@
-const imp1 = () => import('fs').then(module => module.default);
-const fs = await imp1();
+const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
-//const api = async (i) => (await import('../../resources/api.js')).default(i);
 const { api } = await import('../../resources/api.js');
-
 const refreshToken = async (i) => (await import('../refreshToken.js')).default(i);
 
 async function createSession() {
@@ -35,7 +31,7 @@ async function createSession() {
       const res = JSON.parse(retApi.res);
       if ('persistChanges' in res) {
         config.session = res.id;
-        config.expireInSession = Date.now() + (10 * 60000); // + (10 minutos de validade TESTE)
+        config.expireInSession = Date.now() + (7 * 60000); // + (10 minutos de validade TESTE)
         fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
         ret['msg'] = `OK CREATE SESSION`;
         ret['res'] = { 'token': retRefreshToken.res.token, 'session': res.id };
