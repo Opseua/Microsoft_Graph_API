@@ -1,20 +1,8 @@
-import fs from 'fs';
+const fs = await import('fs');
 const configFile = fs.readFileSync('config.json');
 const config = JSON.parse(configFile);
-
-let funApi;
-async function api(inf) {
-    const module = await import('../../resources/api.js');
-    funApi = module.default;
-    return await funApi(inf);
-}
-
-let funRefreshToken;
-async function refreshToken(inf) {
-    const module = await import('../../services/refreshToken.js');
-    funRefreshToken = module.default;
-    return await funRefreshToken(inf);
-}
+const { api } = await import('../../resources/api.js');
+const { refreshToken } = await import('../refreshToken.js');
 
 async function listAllFilesByType() {
     let ret = { 'ret': false };
@@ -52,4 +40,4 @@ async function listAllFilesByType() {
     console.log(ret.msg);
     return ret
 }
-export default listAllFilesByType
+export { listAllFilesByType }
