@@ -1,4 +1,4 @@
-const { addListener, globalObject } = await import('../../../../Chrome_Extension/src/recursos/globalObject.js');
+const { addListener, globalObject } = await import('../../../../Chrome_Extension/src/resources/globalObject.js');
 addListener(monitorGlobalObject);
 async function monitorGlobalObject(value) {
     if (value.inf.funcao == 'updateRange') {
