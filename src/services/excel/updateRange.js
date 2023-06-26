@@ -61,12 +61,12 @@ export { updateRange }
 
 
 
-// for (let i = 0; i < 10; i++) {
-//     const ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
-//     if (ret === false) {
-//         break;
-//     }
-//     await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
-// }
+for (let i = 0; i < 10; i++) {
+    const ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
+    if (ret === false) {
+        break;
+    }
+    await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
+}
 
 

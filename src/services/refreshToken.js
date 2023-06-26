@@ -25,6 +25,7 @@ async function refreshToken() {
             body: formData.toString()
         };
         const retApi = await api(requisicao);
+        console.log(retApi)
         const res = JSON.parse(retApi.res);
         if ('access_token' in res) {
             config.token = res.access_token;
@@ -45,4 +46,3 @@ async function refreshToken() {
     return ret
 }
 export { refreshToken }
-
