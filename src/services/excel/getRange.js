@@ -54,7 +54,7 @@ async function getRange(inf) {
             }
         }
     }
-    console.log(ret.msg);
+    //console.log(ret.msg);
     return ret
 }
 export { getRange }

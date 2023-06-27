@@ -45,7 +45,7 @@ async function refreshToken() {
         }
     }
 
-    console.log(ret.msg);
+    //console.log(ret.msg);
     return ret
 }
 export { refreshToken }

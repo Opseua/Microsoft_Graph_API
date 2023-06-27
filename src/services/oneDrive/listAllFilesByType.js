@@ -42,7 +42,7 @@ async function listAllFilesByType() {
         }
     }
 
-    console.log(ret.msg);
+    //console.log(ret.msg);
     return ret
 }
 export { listAllFilesByType }
