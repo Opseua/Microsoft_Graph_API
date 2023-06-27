@@ -1,6 +1,11 @@
 const fs = await import('fs');
-const configFile = fs.readFileSync('config.json');
+import { fileInf } from '../../../../Chrome_Extension/src/resources/fileInf.js';
+const retfileInf = await fileInf(new URL(import.meta.url).pathname);
+const configPath = `${retfileInf.res.pathProject1}\\config.json`
+const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
+// const configFile = fs.readFileSync('config.json');
+// const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
 const { refreshToken } = await import('../refreshToken.js');
 
@@ -26,7 +31,7 @@ async function listAllFilesByType() {
                 ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
             } else {
                 config.fileId = res.value[0].id;
-                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
                 await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
                 ret['msg'] = `ARQUIVO NOME: ${res.value[0].name} | ARQUIVO ID: ${res.value[0].id}`;
                 ret['ret'] = true;

@@ -1,6 +1,11 @@
 const fs = await import('fs');
-const configFile = fs.readFileSync('config.json');
+import { fileInf } from '../../../../Chrome_Extension/src/resources/fileInf.js';
+const retfileInf = await fileInf(new URL(import.meta.url).pathname);
+const configPath = `${retfileInf.res.pathProject1}\\config.json`
+const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
+// const configFile = fs.readFileSync('config.json');
+// const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
 const { refreshToken } = await import('../refreshToken.js');
 
@@ -37,7 +42,7 @@ async function getSheetInf(inf) {
                     ret['msg'] = `ABA "${sheetTabName}" NAO ENCONTRADA`;
                 } else {
                     config[sheetTabName] = sheetTabId;
-                    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
                     ret['res'] = { 'token': retRefreshToken.res.token, 'sheetTabId': sheetTabId };
                     ret['msg'] = `ABA NOME: ${sheetTabName} | ABA ID: ${sheetTabId}`;
                     ret['ret'] = true;

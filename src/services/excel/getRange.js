@@ -1,6 +1,11 @@
 const fs = await import('fs');
-const configFile = fs.readFileSync('config.json');
+import { fileInf } from '../../../../Chrome_Extension/src/resources/fileInf.js';
+const retfileInf = await fileInf(new URL(import.meta.url).pathname);
+const configPath = `${retfileInf.res.pathProject1}\\config.json`
+const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
+// const configFile = fs.readFileSync('config.json');
+// const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
 const { createSession } = await import('./createSession.js');
 const { getSheetInf } = await import('./getSheetInf.js');

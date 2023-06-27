@@ -1,14 +1,22 @@
 const { addListener, globalObject } = await import('../../../../Chrome_Extension/src/resources/globalObject.js');
 addListener(monitorGlobalObject);
 async function monitorGlobalObject(value) {
-    if (value.inf.funcao == 'updateRange') {
-        await updateRange({ 'sheetTabName': 'YVIE', 'send': value.inf.inf });
+    if (value.inf.function == 'updateRange') {
+        //console.log('→→→', value.inf.res)
+        await updateRange({ 'sheetTabName': 'YVIE', 'send': value.inf.res });
     }
 }
+
 // *****************************************************************
+
 const fs = await import('fs');
-const configFile = fs.readFileSync('config.json');
+import { fileInf } from '../../../../Chrome_Extension/src/resources/fileInf.js';
+const retfileInf = await fileInf(new URL(import.meta.url).pathname);
+const configPath = `${retfileInf.res.pathProject1}\\config.json`
+const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
+// const configFile = fs.readFileSync('config.json');
+// const config = JSON.parse(configFile);
 const { api } = await import('../../resources/api.js');
 const { getRange } = await import('./getRange.js');
 
@@ -61,12 +69,12 @@ export { updateRange }
 
 
 
-for (let i = 0; i < 10; i++) {
-    const ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
-    if (ret === false) {
-        break;
-    }
-    await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
-}
+// for (let i = 0; i < 10; i++) {
+//     const ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
+//     if (ret === false) {
+//         break;
+//     }
+//     await new Promise(resolve => setTimeout(resolve, (1000)));// aguardar 2 segundos
+// }
 
 
