@@ -1,4 +1,4 @@
-await import('./../clearConsole.js');
+await import('../../../Chrome_Extension/src/clearConsole.js');
 const fs = await import('fs');
 import { fileInf } from '../../../Chrome_Extension/src/resources/fileInf.js';
 const retfileInf = await fileInf(new URL(import.meta.url).pathname);
