@@ -24,14 +24,14 @@ async function getSheetInf(inf) {
             const fileId = config.fileId;
             const token = retRefreshToken.res.token;
             let sheetTabId
-            const requisicao = {
+            const infApi = {
                 url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets`,
                 method: 'GET',
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
             };
-            const retApi = await api(requisicao);
+            const retApi = await api(infApi);
             const res = JSON.parse(retApi.res);
             if ('value' in res) {
                 const matchingObject = res.value.find(function (obj) {

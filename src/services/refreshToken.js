@@ -22,13 +22,13 @@ async function refreshToken() {
         formData.append('client_id', clientId);
         formData.append('refresh_token', refresh);
         formData.append('grant_type', 'REFRESH_TOKEN');
-        const requisicao = {
+        const infApi = {
             url: `https://login.microsoftonline.com/common/oauth2/v2.0/token`,
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString()
         };
-        const retApi = await api(requisicao);
+        const retApi = await api(infApi);
         const res = JSON.parse(retApi.res);
         if ('access_token' in res) {
             config.token = res.access_token;

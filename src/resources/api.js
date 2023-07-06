@@ -1,9 +1,9 @@
-async function api(inf_ok) {
+async function api(infOk) {
   const inf = {
-    url: inf_ok.url,
-    method: inf_ok.method,
-    headers: inf_ok.headers,
-    body: inf_ok.body
+    url: infOk.url,
+    method: infOk.method,
+    headers: infOk.headers,
+    body: infOk.body
   };
 
   const ret = { ret: false };
@@ -55,13 +55,13 @@ export { api }
 
 
 /* async function teste() {
-  const requisicao = {
+  const infApi = {
     url: 'https://ntfy.sh/OPSEUA',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: String.raw`ESSA \ É / " A ' INFORMACAO`
   };
-  const retApi = await api(requisicao);
+  const retApi = await api(infApi);
   console.log(retApi.res)
 }
 teste() */
@@ -75,13 +75,13 @@ teste() */
   formData.append('client_id', 'c683fd93-XXXXXXXXXXXXX');
   formData.append('client_secret', '0008Q~XXXXXXXXXX');
   formData.append('resource', 'https://graph.microsoft.com');
-  const requisicao = {
+  const infApi = {
     url: 'https://login.microsoft.com/c5a6c78e-7c99-4631-bb7f-27660b938469/oauth2/token',
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formData.toString()
   };
-  const retApi = await api(requisicao);
+  const retApi = await api(infApi);
   console.log(retApi.res)
 }
 teste() */

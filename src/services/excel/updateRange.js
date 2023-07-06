@@ -40,7 +40,7 @@ async function updateRange(inf) {
         }
     }
     if (run == 1) {
-        const requisicao = {
+        const infApi = {
             url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheetTabName}')/range(address='${sheetCol}${sheetLin}')`,
             method: 'PATCH',
             headers: {
@@ -50,7 +50,7 @@ async function updateRange(inf) {
             },
             body: { 'values': [[`${sheetLin} | ${inf.send}`]] }
         };
-        const retApi = await api(requisicao);
+        const retApi = await api(infApi);
         const res = JSON.parse(retApi.res);
         if (!('values' in res)) {
             run = -1;

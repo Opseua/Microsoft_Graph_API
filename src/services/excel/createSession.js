@@ -23,7 +23,7 @@ async function createSession() {
       const fileId = config.fileId;
       const token = retRefreshToken.res.token;
       const corpo = { 'persistChanges': true };
-      const requisicao = {
+      const infApi = {
         url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
         method: 'POST',
         headers: {
@@ -32,7 +32,7 @@ async function createSession() {
         },
         body: corpo
       };
-      const retApi = await api(requisicao);
+      const retApi = await api(infApi);
       const res = JSON.parse(retApi.res);
       if ('persistChanges' in res) {
         config.session = res.id;

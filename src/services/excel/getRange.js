@@ -24,7 +24,7 @@ async function getRange(inf) {
             const sheetTabId = retGetSheetInf.res.sheetTabId;
             const token = retGetSheetInf.res.token;
             const session = retCreateSession.res.session;
-            const requisicao = {
+            const infApi = {
                 url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets/${sheetTabId}/range(address='A1')`,
                 method: 'GET',
                 headers: {
@@ -32,7 +32,7 @@ async function getRange(inf) {
                     'workbook-session-id': `${session}`
                 }
             };
-            const retApi = await api(requisicao);
+            const retApi = await api(infApi);
             const res = JSON.parse(retApi.res);
             if ('values' in res) {
                 if (JSON.stringify(res.values[0]).includes('\\":\\"')) {

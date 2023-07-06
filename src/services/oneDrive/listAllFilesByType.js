@@ -17,14 +17,14 @@ async function listAllFilesByType() {
     } else {
         const query = config.fileName;
         const token = config.token;
-        const requisicao = {
+        const infApi = {
             url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
             method: 'GET',
             headers: {
                 'authorization': `Bearer ${token}`
             }
         };
-        let res = await api(requisicao);
+        let res = await api(infApi);
         res = JSON.parse(res);
         if ('value' in res) {
             if (res.value.length == 0) {
