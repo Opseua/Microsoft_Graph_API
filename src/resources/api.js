@@ -19,13 +19,12 @@ async function api(infOk) {
         muteHttpExceptions: true,
         validateHttpsCertificates: true,
       });
-      //console.log('API: OK');
+
       ret['ret'] = true;
+      ret['msg'] = 'API: OK';
       ret['res'] = req.getContentText();
-    } catch (error) {
-      console.log('API: ERRO');
-      //return error.message;
-      ret['res'] = error.message;
+    } catch (e) {
+      ret['msg'] = `API: ERRO | ${e.message}`;
     }
   } else { // ######################################### NodeJS ou Chrome
     try {
@@ -36,16 +35,16 @@ async function api(infOk) {
         redirect: 'follow',
         keepalive: true
       });
-      //console.log('API: OK');
+      
       ret['ret'] = true;
+      ret['msg'] = 'API: OK';
       ret['res'] = await req.text();
-    } catch (error) {
-      console.log('API: ERRO');
-      //return error;
-      ret['res'] = error;
+    } catch (e) {
+      ret['msg'] = `API: ERRO | ${e}`;
     }
   }
 
+  if (!ret.ret) { console.log(ret.msg) }
   return ret
 }
 export { api }

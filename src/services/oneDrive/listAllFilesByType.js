@@ -11,38 +11,43 @@ const { refreshToken } = await import('../refreshToken.js');
 
 async function listAllFilesByType() {
     let ret = { 'ret': false };
-    const retRefreshToken = await refreshToken();
-    if (!retRefreshToken.ret) {
-        ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
-    } else {
-        const query = config.fileName;
-        const token = config.token;
-        const infApi = {
-            url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
-            method: 'GET',
-            headers: {
-                'authorization': `Bearer ${token}`
+
+    try {
+        const retRefreshToken = await refreshToken();
+        if (!retRefreshToken.ret) {
+            ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
+        } else {
+            const query = config.fileName;
+            const token = config.token;
+            const infApi = {
+                url: `https://graph.microsoft.com/v1.0/me/drive/root/search(q=\'${query}\')`,
+                method: 'GET',
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            };
+            let res = await api(infApi);
+            res = JSON.parse(res);
+            if ('value' in res) {
+                if (res.value.length == 0) {
+                    ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
+                } else {
+                    config.fileId = res.value[0].id;
+                    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+                    await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
+                    ret['msg'] = `ARQUIVO NOME: ${res.value[0].name} | ARQUIVO ID: ${res.value[0].id}`;
+                    ret['ret'] = true;
+                }
             }
-        };
-        let res = await api(infApi);
-        res = JSON.parse(res);
-        if ('value' in res) {
-            if (res.value.length == 0) {
-                ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
-            } else {
-                config.fileId = res.value[0].id;
-                fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-                await new Promise(resolve => setTimeout(resolve, (2000)));// aguardar 2 segundos
-                ret['msg'] = `ARQUIVO NOME: ${res.value[0].name} | ARQUIVO ID: ${res.value[0].id}`;
-                ret['ret'] = true;
+            else {
+                ret['msg'] = `${res.error.code}`;
             }
         }
-        else {
-            ret['msg'] = `${res.error.code}`;
-        }
+    } catch (e) {
+        ret['msg'] = `LIST ALL FILES BY TYPE: ERRO | ${e}`;
     }
 
-    //console.log(ret.msg);
+    if (!ret.ret) { console.log(ret.msg) }
     return ret
 }
 export { listAllFilesByType }

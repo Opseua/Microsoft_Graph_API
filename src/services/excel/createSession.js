@@ -11,44 +11,49 @@ const { refreshToken } = await import('../refreshToken.js');
 
 async function createSession() {
   let ret = { 'ret': false };
-  const retRefreshToken = await refreshToken();
-  if (!retRefreshToken.ret) {
-    ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
-  } else {
-    if (Date.now() < (config.expireInSession)) {
-      ret['msg'] = `SESSAO VALIDA`;
-      ret['res'] = { 'token': retRefreshToken.res.token, 'session': config.session };
-      ret['ret'] = true;
+
+  try {
+    const retRefreshToken = await refreshToken();
+    if (!retRefreshToken.ret) {
+      ret['msg'] = `ERRO AO ATUALIZAR TOKEN`;
     } else {
-      const fileId = config.fileId;
-      const token = retRefreshToken.res.token;
-      const corpo = { 'persistChanges': true };
-      const infApi = {
-        url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/Json',
-          'authorization': `Bearer ${token}`
-        },
-        body: corpo
-      };
-      const retApi = await api(infApi);
-      const res = JSON.parse(retApi.res);
-      if ('persistChanges' in res) {
-        config.session = res.id;
-        config.expireInSession = Date.now() + (5 * 60000); // + (5 minutos de validade TESTE)
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-        ret['msg'] = `OK CREATE SESSION`;
-        ret['res'] = { 'token': retRefreshToken.res.token, 'session': res.id };
+      if (Date.now() < (config.expireInSession)) {
         ret['ret'] = true;
-      }
-      else {
-        ret['msg'] = `${res.error.code}`;
+        ret['msg'] = `SESSAO VALIDA`;
+        ret['res'] = { 'token': retRefreshToken.res.token, 'session': config.session };
+      } else {
+        const fileId = config.fileId;
+        const token = retRefreshToken.res.token;
+        const corpo = { 'persistChanges': true };
+        const infApi = {
+          url: `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'Application/Json',
+            'authorization': `Bearer ${token}`
+          },
+          body: corpo
+        };
+        const retApi = await api(infApi);
+        const res = JSON.parse(retApi.res);
+        if ('persistChanges' in res) {
+          config.session = res.id;
+          config.expireInSession = Date.now() + (5 * 60000); // + (5 minutos de validade TESTE)
+          fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+          ret['ret'] = true;
+          ret['msg'] = `OK CREATE SESSION`;
+          ret['res'] = { 'token': retRefreshToken.res.token, 'session': res.id };
+        }
+        else {
+          ret['msg'] = `${res.error.code}`;
+        }
       }
     }
+  } catch (e) {
+    ret['msg'] = `CREATE SESSION: ERRO | ${e}`;
   }
 
-  //console.log(ret.msg);
+  if (!ret.ret) { console.log(ret.msg) }
   return ret
 }
 export { createSession }
