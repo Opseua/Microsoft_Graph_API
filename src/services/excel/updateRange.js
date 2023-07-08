@@ -17,7 +17,7 @@ const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
 // const configFile = fs.readFileSync('config.json');
 // const config = JSON.parse(configFile);
-const { api } = await import('../../resources/api.js');
+const { api } = await import('../../../../Chrome_Extension/src/resources/api.js');
 const { getRange } = await import('./getRange.js');
 
 let fileId, retGetRange, sheetTabName, sheetCol, sheetLin, token, session, run = 0
