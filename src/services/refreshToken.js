@@ -5,8 +5,6 @@ const retfileInf = await fileInf(new URL(import.meta.url).pathname);
 const configPath = `${retfileInf.res.pathProject1}\\src\\config.json`
 const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
-// const configFile = fs.readFileSync('config.json');
-// const config = JSON.parse(configFile);
 const { api } = await import('../../../Chrome_Extension/src/resources/api.js');
 
 async function refreshToken() {
@@ -31,6 +29,8 @@ async function refreshToken() {
                 body: formData.toString()
             };
             const retApi = await api(infApi);
+            if (!retApi.ret) { return ret }
+
             const res = JSON.parse(retApi.res);
             if ('access_token' in res) {
                 config.token = res.access_token;

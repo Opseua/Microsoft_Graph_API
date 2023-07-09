@@ -15,8 +15,6 @@ const retfileInf = await fileInf(new URL(import.meta.url).pathname);
 const configPath = `${retfileInf.res.pathProject1}\\src\\config.json`
 const configFile = fs.readFileSync(configPath);
 const config = JSON.parse(configFile);
-// const configFile = fs.readFileSync('config.json');
-// const config = JSON.parse(configFile);
 const { api } = await import('../../../../Chrome_Extension/src/resources/api.js');
 const { getRange } = await import('./getRange.js');
 
@@ -28,18 +26,15 @@ async function updateRange(inf) {
     try {
         if (run == 0) {
             retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
-            if (!retGetRange.ret) {
-                run = -1;
-                console.log('GET RANGE: ERRO');
-            } else {
-                run = 1;
-                fileId = config.fileId;
-                sheetTabName = inf.sheetTabName;
-                sheetCol = `A`;
-                sheetLin = Number(retGetRange.res.values);
-                token = retGetRange.res.token;
-                session = retGetRange.res.session;
-            }
+            if (!retGetRange.ret) { return ret }
+
+            run = 1;
+            fileId = config.fileId;
+            sheetTabName = inf.sheetTabName;
+            sheetCol = `A`;
+            sheetLin = Number(retGetRange.res.values);
+            token = retGetRange.res.token;
+            session = retGetRange.res.session;
         }
         if (run == 1) {
             const infApi = {
@@ -53,6 +48,8 @@ async function updateRange(inf) {
                 body: { 'values': [[`${sheetLin} | ${inf.send}`]] }
             };
             const retApi = await api(infApi);
+            if (!retApi.ret) { return ret }
+
             const res = JSON.parse(retApi.res);
             if (!('values' in res)) {
                 run = -1;
