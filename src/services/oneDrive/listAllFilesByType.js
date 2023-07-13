@@ -8,7 +8,7 @@ const { api } = await import('../../../../Chrome_Extension/src/resources/api.js'
 const { refreshToken } = await import('../refreshToken.js');
 
 async function listAllFilesByType() {
-    let ret = { 'ret': false };
+    const ret = { 'ret': false };
 
     try {
         const retRefreshToken = await refreshToken();

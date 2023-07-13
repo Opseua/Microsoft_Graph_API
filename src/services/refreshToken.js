@@ -8,7 +8,7 @@ const config = JSON.parse(configFile);
 const { api } = await import('../../../Chrome_Extension/src/resources/api.js');
 
 async function refreshToken() {
-    let ret = { 'ret': false };
+    const ret = { 'ret': false };
 
     try {
         if (Date.now() < (config.expireInRefresh)) {

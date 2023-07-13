@@ -21,7 +21,7 @@ const { getRange } = await import('./getRange.js');
 let fileId, retGetRange, sheetTabName, sheetCol, sheetLin, token, session, run = 0
 
 async function updateRange(inf) {
-    let ret = { 'ret': false };
+    const ret = { 'ret': false };
 
     try {
         if (run == 0) {

@@ -9,7 +9,7 @@ const { createSession } = await import('./createSession.js');
 const { getSheetInf } = await import('./getSheetInf.js');
 
 async function getRange(inf) {
-    let ret = { 'ret': false };
+    const ret = { 'ret': false };
 
     try {
         const retCreateSession = await createSession();
