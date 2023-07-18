@@ -1,6 +1,6 @@
 await import('../../../Chrome_Extension/src/clearConsole.js');
 const fs = await import('fs');
-import { fileInf } from '../../../Chrome_Extension/src/resources/fileInf.js';
+const { fileInf } = await import('../../../Chrome_Extension/src/resources/fileInf.js');
 const retfileInf = await fileInf(new URL(import.meta.url).pathname);
 const configPath = `${retfileInf.res.pathProject1}\\src\\config.json`
 const configFile = fs.readFileSync(configPath);
