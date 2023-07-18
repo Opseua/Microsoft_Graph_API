@@ -21,8 +21,7 @@ const { getRange } = await import('./getRange.js');
 let fileId, retGetRange, sheetTabName, sheetCol, sheetLin, token, session, run = 0
 
 async function updateRange(inf) {
-    const ret = { 'ret': false };
-
+    let ret = { 'ret': false };
     try {
         if (run == 0) {
             retGetRange = await getRange({ sheetTabName: inf.sheetTabName });
@@ -50,7 +49,7 @@ async function updateRange(inf) {
             const retApi = await api(infApi);
             if (!retApi.ret) { return ret }
 
-            const res = JSON.parse(retApi.res);
+            const res = JSON.parse(retApi.res.body);
             if (!('values' in res)) {
                 run = -1;
                 ret['msg'] = `${res.error.message}`;
@@ -72,7 +71,7 @@ export { updateRange }
 
 
 // for (let i = 0; i < 10; i++) {
-//     const ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
+//     let ret = await updateRange({ 'sheetTabName': 'YVIE', 'send': 'OLÁ' });
 //     if (ret === false) {
 //         break;
 //     }

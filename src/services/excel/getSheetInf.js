@@ -8,8 +8,7 @@ const { api } = await import('../../../../Chrome_Extension/src/resources/api.js'
 const { refreshToken } = await import('../refreshToken.js');
 
 async function getSheetInf(inf) {
-    const ret = { 'ret': false };
-
+    let ret = { 'ret': false };
     try {
         const retRefreshToken = await refreshToken();
         if (!retRefreshToken.ret) { return ret }
@@ -33,7 +32,7 @@ async function getSheetInf(inf) {
             const retApi = await api(infApi);
             if (!retApi.ret) { return ret }
 
-            const res = JSON.parse(retApi.res);
+            const res = JSON.parse(retApi.res.body);
             if ('value' in res) {
                 const matchingObject = res.value.find(function (obj) {
                     return obj.name === sheetTabName;
@@ -59,5 +58,6 @@ async function getSheetInf(inf) {
     if (!ret.ret) { console.log(ret.msg) }
     return ret
 }
+
 export { getSheetInf }
 

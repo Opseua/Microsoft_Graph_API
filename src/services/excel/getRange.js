@@ -9,8 +9,7 @@ const { createSession } = await import('./createSession.js');
 const { getSheetInf } = await import('./getSheetInf.js');
 
 async function getRange(inf) {
-    const ret = { 'ret': false };
-
+    let ret = { 'ret': false };
     try {
         const retCreateSession = await createSession();
         if (!retCreateSession.ret) { return ret }
@@ -33,7 +32,7 @@ async function getRange(inf) {
         const retApi = await api(infApi);
         if (!retApi.ret) { return ret }
 
-        const res = JSON.parse(retApi.res);
+        const res = JSON.parse(retApi.res.body);
         if ('values' in res) {
             if (JSON.stringify(res.values[0]).includes('\\":\\"')) {
                 msg = JSON.parse(`{${res.values[0]}  "x":"x"}`);

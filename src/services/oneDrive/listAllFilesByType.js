@@ -8,8 +8,7 @@ const { api } = await import('../../../../Chrome_Extension/src/resources/api.js'
 const { refreshToken } = await import('../refreshToken.js');
 
 async function listAllFilesByType() {
-    const ret = { 'ret': false };
-
+    let ret = { 'ret': false };
     try {
         const retRefreshToken = await refreshToken();
         if (!retRefreshToken.ret) { return ret }
@@ -26,7 +25,7 @@ async function listAllFilesByType() {
         const retApi = await api(infApi);
         if (!retApi.ret) { return ret }
 
-        const res = JSON.parse(retApi.res);
+        const res = JSON.parse(retApi.res.body);
         if ('value' in res) {
             if (res.value.length == 0) {
                 ret['msg'] = `NENHUM ARQUIVO ENCONTRADO`;
@@ -49,4 +48,5 @@ async function listAllFilesByType() {
     if (!ret.ret) { console.log(ret.msg) }
     return ret
 }
+
 export { listAllFilesByType }

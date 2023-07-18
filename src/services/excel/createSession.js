@@ -8,7 +8,7 @@ const { api } = await import('../../../../Chrome_Extension/src/resources/api.js'
 const { refreshToken } = await import('../refreshToken.js');
 
 async function createSession() {
-  const ret = { 'ret': false };
+  let ret = { 'ret': false };
 
   try {
     const retRefreshToken = await refreshToken();
@@ -34,7 +34,7 @@ async function createSession() {
       const retApi = await api(infApi);
       if (!retApi.ret) { return ret }
 
-      const res = JSON.parse(retApi.res);
+      const res = JSON.parse(retApi.res.body);
       if ('persistChanges' in res) {
         config.session = res.id;
         config.expireInSession = Date.now() + (5 * 60000); // + (5 minutos de validade TESTE)
@@ -55,4 +55,5 @@ async function createSession() {
   if (!ret.ret) { console.log(ret.msg) }
   return ret
 }
+
 export { createSession }

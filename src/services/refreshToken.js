@@ -8,8 +8,7 @@ const config = JSON.parse(configFile);
 const { api } = await import('../../../Chrome_Extension/src/resources/api.js');
 
 async function refreshToken() {
-    const ret = { 'ret': false };
-
+    let ret = { 'ret': false };
     try {
         if (Date.now() < (config.expireInRefresh)) {
             ret['msg'] = `TOKEN VALIDO`;
@@ -31,7 +30,7 @@ async function refreshToken() {
             const retApi = await api(infApi);
             if (!retApi.ret) { return ret }
 
-            const res = JSON.parse(retApi.res);
+            const res = JSON.parse(retApi.res.body);
             if ('access_token' in res) {
                 config.token = res.access_token;
                 config.refresh = res.refresh_token;
