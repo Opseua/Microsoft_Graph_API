@@ -42,7 +42,7 @@ async function listAllFilesByType() {
         }
 
     } catch (e) {
-        ret['msg'] = `LIST ALL FILES BY TYPE: ERRO | ${e}`;
+        ret['msg'] = regexE({ 'e': e }).res;
     }
 
     if (!ret.ret) { console.log(ret.msg) }

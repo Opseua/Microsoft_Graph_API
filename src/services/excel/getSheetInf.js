@@ -52,7 +52,7 @@ async function getSheetInf(inf) {
             }
         }
     } catch (e) {
-        ret['msg'] = `GET SHEET INF: ERRO | ${e}`;
+        ret['msg'] = regexE({ 'e': e }).res;
     }
 
     if (!ret.ret) { console.log(ret.msg) }

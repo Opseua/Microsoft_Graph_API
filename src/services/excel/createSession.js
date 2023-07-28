@@ -49,7 +49,7 @@ async function createSession() {
     }
 
   } catch (e) {
-    ret['msg'] = `CREATE SESSION: ERRO | ${e}`;
+    ret['msg'] = regexE({ 'e': e }).res;
   }
 
   if (!ret.ret) { console.log(ret.msg) }

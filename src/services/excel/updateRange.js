@@ -58,7 +58,7 @@ async function updateRange(inf) {
             }
         }
     } catch (e) {
-        ret['msg'] = `UPDATE RANGE: ERRO | ${e}`;
+        ret['msg'] = regexE({ 'e': e }).res;
     }
 
     if (!ret.ret) { console.log(ret.msg) }

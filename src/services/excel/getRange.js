@@ -52,7 +52,7 @@ async function getRange(inf) {
             ret['msg'] = `${res.error.code}`;
         }
     } catch (e) {
-        ret['msg'] = `GET RANGE: ERRO | ${e}`;
+        ret['msg'] = regexE({ 'e': e }).res;
     }
 
     if (!ret.ret) { console.log(ret.msg) }

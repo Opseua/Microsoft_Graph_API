@@ -46,7 +46,7 @@ async function refreshToken() {
             }
         }
     } catch (e) {
-        ret['msg'] = `REFRESH TOKEN: ERRO | ${e}`;
+        ret['msg'] = regexE({ 'e': e }).res;
     }
 
     if (!ret.ret) { console.log(ret.msg) }
